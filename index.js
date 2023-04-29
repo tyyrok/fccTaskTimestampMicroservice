@@ -24,6 +24,23 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
+// route for timestamp microservice
+app.get("/api/:date?", (req, res) => {
+  console.log(new Date(req.params.date));
+  if (req.params.date) {
+    if (Date.parse(req.params.date)){
+      res.json({unix: Date.parse(req.params.date), utc: new Date(req.params.date).toUTCString()});
+    } else if (new Date(+req.params.date) != "Invalid Date"){
+      res.json({unix: +req.params.date, utc: new Date(+req.params.date).toUTCString()});
+    } else {
+      res.json({error: "Invalid Date"});
+    }
+  } else {
+    res.json({unix: Date.now(), utc: Date()})
+  }
+  
+  //res.json({unix: req.params.date, utc: new Date(req.params.date)});
+});
 
 
 // listen for requests :)
